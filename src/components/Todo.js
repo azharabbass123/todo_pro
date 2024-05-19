@@ -1,6 +1,10 @@
 import React, { useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
 import '../style.css'
 import todoImg from '../todo.svg'
+import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faEdit } from '@fortawesome/free-regular-svg-icons'
 const Todo = () => {
     const [inputData, setInputData] = useState("");
     const [item, setItem] = useState([]);
@@ -9,20 +13,32 @@ const Todo = () => {
             alert("Please enter the data!")
         } else {
             const myNewInputData = {
-                id: new Date().getTime.toString(),
+                id: new Date().getTime().toString(),
                 name: inputData
             }
             setItem([...item, myNewInputData]);
+            console.log(myNewInputData);
             setInputData("");
         }
     }
+    const deleteItem = (index) => {
+        const updatedItems = item.filter((curElem) => {
+          return curElem.id !== index;
+        });
+        setItem(updatedItems);
+      };
+    
+    const removeAll = () =>{
+        setItem([]);
+    }
+    
   return (
     <>
         <div className="main-div">
             <div className="child-div">
                 <figure>
                     <img src = {todoImg} alt="todologo" />
-                    <figcaption>Add your List Here</figcaption>
+                    <figcaption>✍ Add your List Here</figcaption>
                 </figure>
                 <div className="addItems">
                     <input type="text" 
@@ -32,24 +48,23 @@ const Todo = () => {
                     onChange={(event)=> setInputData(event.target.value)}
                     />
                     {/* <i className='fa fa_plus add-btn' onClick={addItem}></i> */}
-                    <FontAwesomeIcon icon="fa fa_plus add-btn" />
-                    <button onClick={addItem} style={{backgroundColor : "#fff", border: "none", fontSize: "30px", padding: "5px 10px", borderRadius:"4px"}}>+</button>
+                    <FontAwesomeIcon icon={faPlus} onClick={addItem} className='fa fa-plus add-btn' />
                 </div>
                 <div className="showItems">
                     {item.map((curElem) =>{
                         return(
-                            <div className="eachItem" id={curElem.id}>
+                            <div className="eachItem" key={curElem.id}>
                         <h3>{curElem.name}</h3>
                         <div className='todo-btn'>
-                        <i className='far fa_edit add-btn'></i>
-                        <i className='far fa_trash-alt add-btn'></i>
+                            {/* <FontAwesomeIcon icon={faEdit} className='far fa_edit add-btn' /> */}
+                            <FontAwesomeIcon icon={faTrash} onClick={() => deleteItem(curElem.id)} className='far fa_trash-alt add-btn' />
                         </div>
                     </div>
                         )
                     })}
                     
                 </div>
-                <div className="showItems"><button className="btn effect04" data-sm-link-text="Remove All">
+                <div className="showItems"><button className="btn effect04" data-sm-link-text="Remove All" onClick={() =>{removeAll()}}>
                     <span>CHECK LIST</span>
                     </button></div>
             </div>
